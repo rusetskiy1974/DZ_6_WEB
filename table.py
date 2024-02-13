@@ -36,7 +36,7 @@ class Table:
         finally:
             c.close()
 
-    def create(self, obj_dict: dict) -> int | None:
+    def create(self, cur, obj_dict: dict) -> int | None:
         table_columns = (",").join(obj_dict.keys())
         table_questions = (",").join("?" for _ in obj_dict.keys())
 
@@ -44,15 +44,10 @@ class Table:
 
         logging.debug(sql_request)
         logging.debug(list(obj_dict.values()))
-        cur = self.conn.cursor()
 
         try:
             cur.execute(sql_request, list(obj_dict.values()))
-            self.conn.commit()
         except sqlite3.Error as e:
             print(e)
-        finally:
-            cur.close()
-
         return cur.lastrowid
 
